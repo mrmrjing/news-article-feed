@@ -13,6 +13,9 @@
 // Provide a navigation link to the fetch/display page.
 
 import React, { useState } from 'react';
+import axios from 'axios';
+import {Link} from 'react-router-dom';
+
 
 const CreateUpdateArticle: React.FC = () => {
     const [article, setArticle] = useState({
@@ -30,7 +33,7 @@ const CreateUpdateArticle: React.FC = () => {
     });
 
     // Handle form input changes 
-    const handleSubmit = (e: React.FormEvent): void => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Validate the form 
@@ -73,18 +76,31 @@ const CreateUpdateArticle: React.FC = () => {
             setErrors(newErrors);
             return; 
         }
+        
 
     // Submit the form data to the server or database
     // You can use Axios or fetch for this purpose
+    // To send the form data to the database, need to make a HTTP POST request to the server's API endpoint 
+    try{
+        // Send the form data to the server using Axios 
+        const response = await axios.post('/api/articles', article); // Replace '/api/articles' with your actual API endpoint
 
-    // After successful submission, clear the form
+        // Handle the response from the server (eg: show success message)
+        console.log('Form submitted successfully', response.data);
+    
+        // After successful submission, clear the form
         setArticle({
             title: '',
             summary: '',
             date: '',
             publisher: '',
         });
-    };
+
+    } catch(error){
+        // Handle errors (eg: display error message to the user)
+        console.error("Error submitting form", error);
+    }
+};
 
     return (
         <div> 
@@ -131,18 +147,14 @@ const CreateUpdateArticle: React.FC = () => {
 
                 <button type="submit">Submit</button>
             </form>
+
+            {/* Navigation Link */ }
+            <Link to="/fetch-page"> Go to Fetch/Display Page</Link>
         </div>
     ); 
 }; 
 
 export default CreateUpdateArticle;
-
-
-
-
-
-
-
 
 
 
